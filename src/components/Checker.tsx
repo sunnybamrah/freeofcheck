@@ -227,7 +227,7 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
 
         <button
           type="submit"
-          className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-trust px-5 text-verdict font-semibold text-white"
+          className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-trustBtn px-5 text-verdict font-semibold text-white"
         >
           <SearchIcon size={20} />
           {S.home.checkButton}

@@ -45,6 +45,13 @@
 }
 
 @layer components {
+  /* Inline links must be distinguishable without color (WCAG 1.4.1). Applies to
+     anchors only — buttons styled with text-trust stay underline-free. */
+  a.text-trust {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
   /* Skeleton shimmer for the loading state */
   .skeleton {
     background: linear-gradient(90deg, #141a21 25%, #1b232b 37%, #141a21 63%);

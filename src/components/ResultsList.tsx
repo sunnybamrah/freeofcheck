@@ -58,7 +58,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry?: () => voi
         <button
           type="button"
           onClick={onRetry}
-          className="mt-4 inline-flex min-h-[44px] items-center rounded-xl bg-trust px-5 text-body font-semibold text-white"
+          className="mt-4 inline-flex min-h-[44px] items-center rounded-xl bg-trustBtn px-5 text-body font-semibold text-white"
         >
           {S.states.error.retry}
         </button>

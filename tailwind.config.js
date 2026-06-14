@@ -9,7 +9,8 @@ export default {
         base: "#0B0F14", // near-black blue-gray background
         surface: "#141A21", // elevated cards
         hairline: "#1F2933", // dividers / card borders
-        trust: "#3B82F6", // primary trust-blue (buttons, links, focus)
+        trust: "#3B82F6", // trust-blue for links/text/focus on dark bg (passes 4.5:1)
+        trustBtn: "#2563EB", // darker blue for FILLED buttons w/ white text (5.17:1)
         accent: "#1E3A5F", // deep-blue header accent
         teal: "#34D399", // safe/healthy green accent
         ink: "#F1F5F9", // text primary

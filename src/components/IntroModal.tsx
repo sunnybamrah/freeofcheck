@@ -55,7 +55,7 @@ export function IntroModal() {
           ref={acceptRef}
           type="button"
           onClick={dismiss}
-          className="mt-5 min-h-[44px] w-full rounded-xl bg-trust px-5 text-body font-semibold text-white"
+          className="mt-5 min-h-[44px] w-full rounded-xl bg-trustBtn px-5 text-body font-semibold text-white"
         >
           {S.disclaimer.modalAccept}
         </button>

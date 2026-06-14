@@ -53,7 +53,7 @@ export function FeedbackPage() {
       <div className="mt-6 flex flex-wrap gap-3">
         <a
           href={`mailto:${FEEDBACK_EMAIL}?subject=FreeOfCheck%20feedback`}
-          className="inline-flex min-h-[44px] items-center rounded-xl bg-trust px-5 text-body font-semibold text-white"
+          className="inline-flex min-h-[44px] items-center rounded-xl bg-trustBtn px-5 text-body font-semibold text-white"
         >
           Email feedback
         </a>
@@ -113,7 +113,7 @@ export function NotFoundPage() {
         </p>
         <Link
           to="/"
-          className="mt-5 inline-flex min-h-[44px] items-center rounded-xl bg-trust px-5 text-body font-semibold text-white"
+          className="mt-5 inline-flex min-h-[44px] items-center rounded-xl bg-trustBtn px-5 text-body font-semibold text-white"
         >
           Check a medicine
         </Link>
