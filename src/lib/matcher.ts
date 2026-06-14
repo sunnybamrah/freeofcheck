@@ -117,7 +117,12 @@ function compile(allergen: AllergenDef): Compiled {
  * Green is reserved strictly for "label listed ingredients and none matched".
  */
 export function evaluateText(inactiveIngredient: string[], allergen: AllergenDef): MatchResult {
-  const source = (inactiveIngredient ?? []).join(" | ").trim();
+  // Trim/drop empty entries BEFORE joining, so an array of whitespace-only
+  // strings (e.g. ["  ", ""]) is treated as no_data, not a green "not listed".
+  const source = (inactiveIngredient ?? [])
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+    .join(" | ");
   if (!source) {
     return { state: "no_data", containsHits: [], ambiguousHits: [] };
   }

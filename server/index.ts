@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
+import { secureHeaders } from "hono/secure-headers";
 import { readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,6 +9,10 @@ import { api } from "./api";
 import { maybePrewarm } from "./prewarm";
 
 const app = new Hono();
+
+// Sensible security headers (HSTS, nosniff, frame, referrer-policy). No CSP set,
+// to avoid breaking the inline JSON-LD / PWA service worker.
+app.use("*", secureHeaders());
 
 const PORT = Number(process.env.PORT) || 8787;
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -32,8 +37,11 @@ if (serveStaticFiles) {
   // router shows a styled 404 for unknown paths).
   app.get("/*", async (c) => {
     try {
+      // Known routes are prerendered files served by serveStatic above; reaching
+      // here means the path is unknown -> serve the SPA (renders the 404 page)
+      // with a real 404 status so crawlers don't index junk URLs (no soft-404).
       const html = await readFile(join(DIST, "index.html"), "utf8");
-      return c.html(html);
+      return c.html(html, 404);
     } catch {
       const page = await readFile(join(DIST, "500.html"), "utf8").catch(
         () => "Build not found. Run `npm run build`.",

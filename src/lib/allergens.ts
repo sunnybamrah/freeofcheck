@@ -93,7 +93,9 @@ export const ALLERGENS: AllergenDef[] = [
     shortLabel: "Soy",
     blurb: "Soy-derived ingredients such as soybean oil or soy lecithin.",
     chip: true,
-    includes: ["soy", "soya", "soybean", "soybean oil", "soy lecithin", "soya lecithin"],
+    // /soybeans?/ catches "soybean", "soybeans", and "soybean(s) oil" — a plain
+    // "soybean" string term would miss the real FDA spelling "soybeans".
+    includes: ["soy", "soya", /soybeans?/, "soy lecithin", "soya lecithin"],
     // Bare "lecithin" without a stated source is often soy-derived -> amber.
     redFlags: ["lecithin"],
     redFlagSuppressors: ["sunflower", "egg", "rapeseed", "canola"],

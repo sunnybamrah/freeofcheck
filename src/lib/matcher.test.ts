@@ -205,6 +205,24 @@ describe("matcher — audit hardening (false-green fixes)", () => {
   });
 });
 
+describe("matcher — final-audit false-green fixes", () => {
+  it("soy plural 'soybeans' is CONTAINS (was a false green)", () => {
+    expect(state("soy", "roasted soybeans, salt")).toBe("contains");
+    expect(state("soy", "hydrogenated soybeans")).toBe("contains");
+  });
+  it("'soybean oil' and 'soybeans oil' both CONTAINS", () => {
+    expect(state("soy", "soybean oil")).toBe("contains");
+    expect(state("soy", "soybeans oil, water")).toBe("contains");
+  });
+  it("multi-element all-whitespace array is no_data, NOT green", () => {
+    expect(evaluateText(["   ", ""], a("lactose")).state).toBe("no_data");
+    expect(evaluateText(["\t", "  ", ""], a("peg")).state).toBe("no_data");
+  });
+  it("whitespace padding around real ingredients still matches", () => {
+    expect(evaluateText(["  lactose monohydrate  ", ""], a("lactose")).state).toBe("contains");
+  });
+});
+
 describe("dictionary integrity", () => {
   it("every allergen has a unique id and non-empty includes", () => {
     const ids = new Set<string>();

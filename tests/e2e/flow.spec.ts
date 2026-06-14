@@ -105,6 +105,13 @@ test.describe("FreeOfCheck full flow (mobile)", () => {
     expect(checkCalls).toBe(1);
   });
 
+  test("unknown route returns a real 404 status and the custom 404 page", async ({ page }) => {
+    const resp = await page.goto("/this-route-does-not-exist");
+    expect(resp?.status()).toBe(404);
+    await expect(page.getByText(/Page not found/i)).toBeVisible();
+    await expect(page.getByTestId("disclaimer")).toBeVisible();
+  });
+
   test("loading shows the skeleton state", async ({ page }) => {
     await page.route("**/api/suggest*", (r) => r.fulfill({ json: { suggestions: [] } }));
     await page.route("**/api/check*", async (r) => {
