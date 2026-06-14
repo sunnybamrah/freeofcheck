@@ -21,9 +21,12 @@ app.get("/healthz", (c) => c.json({ ok: true, service: "freeofcheck", ts: new Da
 // --- API routes (openFDA proxy) ---
 app.route("/api", api);
 
-// --- Static client + SPA fallback (production only) ---
-const isProd = process.env.NODE_ENV === "production";
-if (isProd) {
+// --- Static client + SPA fallback ---
+// Serve the built client UNLESS we're in the Vite dev setup (where Vite serves
+// the client and proxies /api here). FOC_DEV=1 is set only by the dev:server
+// script, so production/Railway serves static without depending on NODE_ENV.
+const serveStaticFiles = process.env.FOC_DEV !== "1";
+if (serveStaticFiles) {
   app.use("/*", serveStatic({ root: DIST }));
   // SPA fallback: any non-file, non-api route serves index.html (the client
   // router shows a styled 404 for unknown paths).

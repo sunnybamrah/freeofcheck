@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "concurrently -k -n web,api -c blue,green \"vite\" \"npm:dev:server\"",
-    "dev:server": "tsx watch server/index.ts",
+    "dev:server": "FOC_DEV=1 tsx watch server/index.ts",
     "build": "vite build && tsx scripts/prerender.tsx && npm run build:server",
     "build:client": "vite build",
     "build:server": "esbuild server/index.ts --bundle --platform=node --format=esm --target=node20 --outfile=server/dist/index.js --packages=external",
