@@ -5,7 +5,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createElement } from "react";
 import { App } from "../src/App";
-import { PRERENDER_ROUTES } from "../src/content/seo";
+import { PRERENDER_ROUTES, SITEMAP_PATHS, SITE } from "../src/content/seo";
 
 // Post-build prerender (SEO). For each static route we render the real React
 // tree to HTML and inject it (plus per-route <title>/meta/JSON-LD) into the
@@ -60,9 +60,17 @@ async function main() {
     html = setMetaDescription(html, route.description);
     html = setCanonical(html, `https://freeofcheck.com${route.path === "/" ? "/" : route.path}`);
     if (route.jsonLd) {
-      const ld = `<script type="application/ld+json">${JSON.stringify(route.jsonLd)}</script>`;
+      const blocks = Array.isArray(route.jsonLd) ? route.jsonLd : [route.jsonLd];
+      const ld = blocks
+        .map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`)
+        .join("\n  ");
       html = injectHead(html, ld);
     }
+    // Per-route OG url
+    html = html.replace(
+      /<meta property="og:url"[\s\S]*?\/>/,
+      `<meta property="og:url" content="${SITE}${route.path === "/" ? "/" : route.path}" />`,
+    );
 
     const outDir = route.path === "/" ? DIST : join(DIST, route.path);
     await mkdir(outDir, { recursive: true });
@@ -70,6 +78,17 @@ async function main() {
     console.log(`[prerender] ${route.path} -> ${join(outDir, "index.html").replace(DIST, "dist")}`);
   }
   console.log(`[prerender] done (${PRERENDER_ROUTES.length} routes).`);
+
+  // sitemap.xml
+  const now = "2026-06-15";
+  const urls = SITEMAP_PATHS.map(
+    (p) =>
+      `  <url><loc>${SITE}${p === "/" ? "/" : p}</loc><lastmod>${now}</lastmod>` +
+      `<priority>${p === "/" ? "1.0" : "0.7"}</priority></url>`,
+  ).join("\n");
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  await writeFile(join(DIST, "sitemap.xml"), sitemap, "utf8");
+  console.log(`[prerender] sitemap.xml (${SITEMAP_PATHS.length} urls)`);
 }
 
 main();

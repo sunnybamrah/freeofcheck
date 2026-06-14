@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { api } from "./api";
+import { maybePrewarm } from "./prewarm";
 
 const app = new Hono();
 
@@ -24,19 +25,24 @@ app.route("/api", api);
 const isProd = process.env.NODE_ENV === "production";
 if (isProd) {
   app.use("/*", serveStatic({ root: DIST }));
-  // SPA fallback: any non-file, non-api route serves index.html.
+  // SPA fallback: any non-file, non-api route serves index.html (the client
+  // router shows a styled 404 for unknown paths).
   app.get("/*", async (c) => {
     try {
       const html = await readFile(join(DIST, "index.html"), "utf8");
       return c.html(html);
     } catch {
-      return c.text("Build not found. Run `npm run build`.", 500);
+      const page = await readFile(join(DIST, "500.html"), "utf8").catch(
+        () => "Build not found. Run `npm run build`.",
+      );
+      return c.html(page, 500);
     }
   });
 }
 
 serve({ fetch: app.fetch, port: PORT }, (info) => {
   console.log(`[freeofcheck] server listening on http://localhost:${info.port}`);
+  maybePrewarm();
 });
 
 export { app };
