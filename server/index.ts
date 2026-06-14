@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { api } from "./api";
 
 const app = new Hono();
 
@@ -16,8 +17,8 @@ const DIST = join(__dirname, __dirname.endsWith("dist") ? "../../dist" : "../dis
 // --- Health check (Railway healthcheck target) ---
 app.get("/healthz", (c) => c.json({ ok: true, service: "freeofcheck", ts: new Date().toISOString() }));
 
-// --- API routes (full openFDA proxy added in M3) ---
-// Mounted in M3: import { api } from "./api"; app.route("/api", api);
+// --- API routes (openFDA proxy) ---
+app.route("/api", api);
 
 // --- Static client + SPA fallback (production only) ---
 const isProd = process.env.NODE_ENV === "production";

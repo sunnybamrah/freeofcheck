@@ -70,6 +70,8 @@ export interface CheckResponse {
   total: number;
   capped: boolean;
   fromCache: boolean;
+  /** true when the daily upstream budget is nearly spent (client shows a soft banner) */
+  degraded?: boolean;
   labels: NormalizedLabel[];
 }
 
