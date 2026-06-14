@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="40" viewBox="0 0 200 40" role="img" aria-label="FreeOfCheck">
+  <circle cx="20" cy="20" r="16" fill="#0F2A22"/>
+  <path d="M 12 21 L 18 27 L 30 13" fill="none" stroke="#34D399" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="44" y="27" font-family="-apple-system, system-ui, sans-serif" font-size="22" font-weight="700" fill="#F1F5F9">FreeOfCheck</text>
+</svg>

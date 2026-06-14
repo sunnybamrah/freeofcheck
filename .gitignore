@@ -1,0 +1,29 @@
+# dependencies
+node_modules
+
+# build output
+dist
+dev-dist
+server/dist
+
+# test / coverage artifacts
+coverage
+playwright-report
+test-results
+.vitest
+
+# generated PWA service worker dev artifacts
+sw.js
+workbox-*.js
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# editor / OS
+.DS_Store
+.idea
+.vscode
+*.log
+npm-debug.log*
