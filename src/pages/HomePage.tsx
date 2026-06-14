@@ -1,13 +1,25 @@
-// M1 placeholder home page — confirms the dark theme + tokens render.
-// Replaced by the real search experience in M5.
+import { Layout } from "../components/Layout";
+import { IntroModal } from "../components/IntroModal";
+import { Checker } from "../components/Checker";
+import { TrustPanel } from "../components/TrustPanel";
+import { S } from "../content/strings";
+
 export function HomePage() {
   return (
-    <main className="min-h-screen bg-base text-ink flex flex-col items-center justify-center px-5 text-center">
-      <h1 className="text-h1 text-ink">FreeOfCheck</h1>
-      <p className="mt-3 text-body text-muted max-w-prose">
-        Know what&apos;s NOT in your medicine.
-      </p>
-      <p className="mt-6 text-caption text-muted">Scaffold online — building the checker.</p>
-    </main>
+    <Layout>
+      <IntroModal />
+      <section>
+        <h1 className="text-h1 text-ink">{S.home.h1}</h1>
+        <p className="mt-2 text-body text-muted">{S.home.intro}</p>
+      </section>
+
+      <div className="mt-5">
+        <Checker />
+      </div>
+
+      <div className="mt-8">
+        <TrustPanel />
+      </div>
+    </Layout>
   );
 }
