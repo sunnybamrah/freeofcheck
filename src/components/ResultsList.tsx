@@ -123,6 +123,11 @@ function OkState({
 
   return (
     <div className="space-y-3">
+      {/* Clear, stable heading of WHAT is being shown — so instant ingredient
+          switching can't be skimmed without noticing the subject changed. */}
+      <h2 className="text-h2 text-ink">
+        {S.results.forHeading(response.query, ingredientLabel)}
+      </h2>
       {/* aria-live announces the result count + makes a Contains result audible
           even though not-listed cards sort first */}
       <p aria-live="polite" className="text-body text-muted">

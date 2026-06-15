@@ -51,6 +51,16 @@ export function HelpCircle({ className, size = 20, title }: IconProps) {
   );
 }
 
+export function InfoCircle({ className, size = 20, title }: IconProps) {
+  return (
+    <svg className={className} {...base(size, title)}>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="11" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+  );
+}
+
 export function MinusCircle({ className, size = 20, title }: IconProps) {
   return (
     <svg className={className} {...base(size, title)}>

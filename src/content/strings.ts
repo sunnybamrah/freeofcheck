@@ -53,12 +53,17 @@ export const S = {
         case "ambiguous":
           return `Possibly contains ${ingredient} — source not stated`;
         case "not_listed":
-          return `Likely free — ${ingredient} not listed`;
+          // Neutral wording — NOT "likely free"/"safe". "Not listed" is a neutral
+          // finding, never a guarantee of absence (Decision Council safety review).
+          return `${ingredient} not listed on this label`;
         case "no_data":
           return "The label doesn't say";
       }
     },
     foundText: (hits: string[]) => (hits.length ? `Found on label: ${hits.join(", ")}` : ""),
+    // Per-verdict "what to do next" (Decision Council safety review).
+    containsNext: (ingredient: string) =>
+      `Avoid this formulation if you're steering clear of ${ingredient}, and ask your pharmacist about alternatives.`,
     // The mandatory per-row absence caveat (spec §3.5) — shown on every not_listed row.
     notListedCaveat: (ingredient: string) =>
       `This FDA label does not list ${ingredient}, but absence from a label is not a guarantee. Formulations change, generics differ by manufacturer, and the FDA does not require the source of every ingredient to be named. Confirm with your pharmacist or the manufacturer before relying on this — especially for a severe allergy.`,

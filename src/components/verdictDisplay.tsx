@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import type { VerdictState } from "../lib/types";
-import { AlertTriangle, CheckCircle, HelpCircle, MinusCircle } from "./Icons";
+import { AlertTriangle, HelpCircle, InfoCircle, MinusCircle } from "./Icons";
 
 interface IconC {
   className?: string;
@@ -29,7 +29,8 @@ export const VERDICT_DISPLAY: Record<VerdictState, VerdictDisplay> = {
     accent: "bg-verdict-warnText",
   },
   not_listed: {
-    Icon: CheckCircle,
+    // Neutral icon (not a green checkmark) — a checkmark also reads as "safe".
+    Icon: InfoCircle,
     chip: "bg-verdict-okBg text-verdict-okText",
     accent: "bg-verdict-okText",
   },

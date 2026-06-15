@@ -17,8 +17,9 @@ export default {
         muted: "#94A3B8", // text secondary / captions
         // Verdict states
         verdict: {
-          okText: "#34D399",
-          okBg: "#0F2A22",
+          // "Not listed" is a NEUTRAL finding, never green/safe (safety review).
+          okText: "#9CC2E8",
+          okBg: "#17222F",
           badText: "#F87171",
           badBg: "#2A1416",
           warnText: "#FBBF24",

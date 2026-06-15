@@ -35,10 +35,11 @@ describe("verdict strings never overclaim", () => {
     }
   });
 
-  it("the not-listed verdict says 'likely free — not listed', not 'free of'", () => {
-    const label = S.verdict.label("not_listed", "PEG");
-    expect(label.toLowerCase()).toContain("not listed");
-    expect(label.toLowerCase()).toContain("likely free");
+  it("the not-listed verdict is a neutral 'not listed' finding — never 'free'/'safe'", () => {
+    const label = S.verdict.label("not_listed", "PEG").toLowerCase();
+    expect(label).toContain("not listed on this label");
+    expect(label).not.toContain("free"); // no "likely free" / "free of"
+    expect(label).not.toContain("safe");
   });
 });
 

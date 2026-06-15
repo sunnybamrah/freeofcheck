@@ -46,7 +46,9 @@ describe("VerdictCard", () => {
   it("not-listed card shows the mandatory absence caveat and never the words 'free of'", () => {
     const [card] = buildVerdictCards([FIXTURES.cleanTablet], a("lactose"));
     const { container } = render(<VerdictCard card={card} ingredientLabel="Lactose" />);
-    expect(screen.getByText(/Likely free — Lactose not listed/i)).toBeInTheDocument();
+    expect(screen.getByText(/Lactose not listed on this label/i)).toBeInTheDocument();
+    // never green/checkmark "safe" framing
+    expect(container.textContent?.toLowerCase()).not.toContain("likely free");
     expect(screen.getByText(/absence from a label is not a guarantee/i)).toBeInTheDocument();
     expect(container.textContent?.toLowerCase()).not.toContain("free of");
   });
@@ -56,7 +58,7 @@ describe("VerdictCard", () => {
     render(<VerdictCard card={card} ingredientLabel="Gluten" />);
     expect(card.state).toBe("ambiguous");
     expect(screen.getByText(/Possibly contains Gluten — source not stated/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Likely free/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/not listed on this label/i)).not.toBeInTheDocument();
   });
 });
 

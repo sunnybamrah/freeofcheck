@@ -45,6 +45,10 @@ export function VerdictCard({ card, ingredientLabel, pharmacistView = false }: P
 
         {found && <p className="mt-2 text-body text-ink">{found}</p>}
 
+        {card.state === "contains" && (
+          <p className="mt-2 text-caption text-muted">{S.verdict.containsNext(ingredientLabel)}</p>
+        )}
+
         {caveat && <p className="mt-2 text-caption text-muted">{caveat}</p>}
 
         {card.hasIngredientData && (
