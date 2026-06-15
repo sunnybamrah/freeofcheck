@@ -41,7 +41,10 @@ export function VerdictCard({ card, ingredientLabel, pharmacistView = false }: P
         <p className="mt-0.5 text-caption text-muted">
           {[card.manufacturer, card.dosage].filter(Boolean).join(" · ") || "Manufacturer not stated"}
         </p>
-        <p className="text-caption text-muted">{S.results.labelDated(card.effectiveDate)}</p>
+        <p className="text-caption text-muted">
+          {S.results.labelDated(card.effectiveDate)}
+          {card.ndc ? ` · NDC ${card.ndc}` : ""}
+        </p>
 
         {found && <p className="mt-2 text-body text-ink">{found}</p>}
 

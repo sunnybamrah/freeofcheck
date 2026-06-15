@@ -12,6 +12,7 @@ export interface VerdictCard {
   title: string;
   manufacturer: string | null;
   dosage: string | null;
+  ndc: string | null;
   effectiveDate: string | null;
   /** verbatim substrings that triggered Contains / amber (for the chip subtitle) */
   hits: string[];
@@ -66,6 +67,7 @@ export function buildVerdictCards(labels: NormalizedLabel[], allergen: AllergenD
         "Brand not specified on label",
       manufacturer: l.manufacturerName ? titleCase(l.manufacturerName) : null,
       dosage: l.dosageForm ?? l.route,
+      ndc: l.ndc,
       effectiveDate: l.effectiveDate,
       hits: m.state === "contains" ? m.containsHits : m.state === "ambiguous" ? m.ambiguousHits : [],
       passages: l.inactiveIngredient.filter((s) => s.trim().length > 0),

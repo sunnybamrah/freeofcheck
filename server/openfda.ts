@@ -91,6 +91,7 @@ interface FdaResult {
     route?: string[];
     spl_set_id?: string[];
     spl_id?: string[];
+    product_ndc?: string[];
   };
 }
 
@@ -152,6 +153,7 @@ function normalize(r: FdaResult): NormalizedLabel {
   return {
     splId: r.id ?? firstStr(o.spl_id) ?? "",
     splSetId: firstStr(o.spl_set_id) ?? r.set_id ?? null,
+    ndc: firstStr(o.product_ndc),
     brandName: firstStr(o.brand_name),
     genericName: firstStr(o.generic_name),
     manufacturerName: firstStr(o.manufacturer_name),

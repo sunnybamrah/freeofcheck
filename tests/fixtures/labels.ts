@@ -8,6 +8,7 @@ function L(p: Partial<NormalizedLabel>): NormalizedLabel {
   return {
     splId: p.splId ?? "spl-x",
     splSetId: p.splSetId ?? "set-x",
+    ndc: p.ndc ?? "12345-678-90",
     brandName: p.brandName ?? null,
     genericName: p.genericName ?? null,
     manufacturerName: p.manufacturerName ?? null,

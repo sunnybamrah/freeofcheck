@@ -50,6 +50,8 @@ export interface NormalizedLabel {
   splId: string;
   /** SPL set id — used for the DailyMed deep link */
   splSetId: string | null;
+  /** product NDC — pins the verdict to the exact formulation/package */
+  ndc: string | null;
   brandName: string | null;
   genericName: string | null;
   manufacturerName: string | null;
