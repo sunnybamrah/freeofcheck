@@ -223,6 +223,62 @@ describe("matcher — final-audit false-green fixes", () => {
   });
 });
 
+describe("matcher — newly added ingredients", () => {
+  const pos: Array<[string, string]> = [
+    ["gelatin", "gelatin, titanium dioxide"],
+    ["gelatin", "bovine gelatine"],
+    ["titanium-dioxide", "hypromellose, titanium dioxide, talc"],
+    ["titanium-dioxide", "color: E171"],
+    ["sesame", "sesame oil"],
+    ["peanut", "arachis oil (peanut oil)"],
+    ["peanut", "refined groundnut oil"],
+    ["corn", "corn starch, magnesium stearate"],
+    ["sulfites", "sodium metabisulfite"],
+    ["sulfites", "potassium metabisulphite"],
+    ["aspartame", "aspartame, phenylalanine"],
+    ["propylene-glycol", "propylene glycol, water"],
+    ["benzyl-alcohol", "benzyl alcohol 1.5%"],
+    ["benzyl-alcohol", "sodium benzoate"],
+    ["parabens", "methylparaben, propylparaben"],
+    ["sorbitol", "sorbitol solution, glycerin"],
+    ["milk", "casein, sodium caseinate"],
+    ["milk", "whey protein"],
+    ["egg", "egg lecithin"],
+    ["egg", "ovalbumin"],
+  ];
+  it.each(pos)("%s matches %j", (id, text) => {
+    expect(state(id, text)).toBe("contains");
+  });
+
+  const neg: Array<[string, string]> = [
+    ["corn", "cornea repair solution"], // 'corn' must not match 'cornea'
+    ["corn", "popcorn flavor"], // not a standalone 'corn'
+    ["egg", "eggplant extract"], // 'egg' must not match 'eggplant'
+    ["propylene-glycol", "polyethylene glycol 3350"], // PG is NOT PEG
+    ["sesame", "magnesium stearate"],
+    ["gelatin", "vegetable cellulose capsule"],
+  ];
+  it.each(neg)("%s does NOT match %j", (id, text) => {
+    expect(state(id, text)).toBe("not_listed");
+  });
+
+  it("corn dextrose/maltodextrin is AMBER (often corn, source not stated)", () => {
+    expect(state("corn", "maltodextrin, magnesium stearate")).toBe("ambiguous");
+    expect(state("corn", "dextrose monohydrate")).toBe("ambiguous");
+  });
+
+  it("propylene glycol and PEG stay distinct", () => {
+    expect(state("peg", "propylene glycol")).toBe("not_listed");
+    expect(state("propylene-glycol", "PEG 400")).toBe("not_listed");
+  });
+
+  it("polysorbate matches (80/20 + Tween) and is not PEG", () => {
+    expect(state("polysorbate", "polysorbate 80, water")).toBe("contains");
+    expect(state("polysorbate", "Tween 20")).toBe("contains");
+    expect(state("peg", "polysorbate 80")).toBe("not_listed");
+  });
+});
+
 describe("dictionary integrity", () => {
   it("every allergen has a unique id and non-empty includes", () => {
     const ids = new Set<string>();
