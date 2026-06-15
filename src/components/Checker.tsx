@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CHIP_ALLERGENS, adHocAllergen, getAllergen } from "../lib/allergens";
+import { CHIP_ALLERGENS, adHocAllergen, getAllergen, findAllergenByText } from "../lib/allergens";
 import { checkDrug, fetchSuggestions, ApiClientError } from "../lib/api";
 import type { CheckResponse } from "../lib/types";
 import { S } from "../content/strings";
@@ -29,7 +29,8 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
   const ranInitial = useRef(false);
 
   const activeAllergen = useMemo(() => {
-    if (ingredient.kind === "custom") return adHocAllergen(ingredient.term);
+    if (ingredient.kind === "custom")
+      return findAllergenByText(ingredient.term) ?? adHocAllergen(ingredient.term);
     return getAllergen(ingredient.id) ?? adHocAllergen(ingredient.id);
   }, [ingredient]);
 

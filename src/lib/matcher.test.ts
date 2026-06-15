@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { evaluateText } from "./matcher";
-import { getAllergen, adHocAllergen, ALLERGENS } from "./allergens";
+import { getAllergen, adHocAllergen, ALLERGENS, findAllergenByText } from "./allergens";
 import type { VerdictState } from "./types";
 
 function a(id: string) {
@@ -276,6 +276,55 @@ describe("matcher — newly added ingredients", () => {
     expect(state("polysorbate", "polysorbate 80, water")).toBe("contains");
     expect(state("polysorbate", "Tween 20")).toBe("contains");
     expect(state("peg", "polysorbate 80")).toBe("not_listed");
+  });
+});
+
+describe("matcher — triple-checked workflow additions", () => {
+  const pos: Array<[string, string]> = [
+    ["blue-1", "FD&C Blue No. 1 Aluminum Lake"],
+    ["blue-1", "brilliant blue fcf"],
+    ["blue-2", "indigo carmine"],
+    ["red-3", "erythrosine"],
+    ["dc-yellow-10", "D&C Yellow No. 10"],
+    ["carmine", "cochineal extract"],
+    ["iron-oxides", "red ferric oxide"],
+    ["bha", "butylated hydroxyanisole"],
+    ["bht", "BHT"],
+    ["edta", "disodium edetate"],
+    ["chlorobutanol", "chlorobutanol hemihydrate"],
+    ["phenol", "liquefied phenol"],
+    ["cresol", "metacresol"],
+    ["fructose", "high fructose corn syrup"],
+    ["xylitol", "xylitol"],
+    ["sucralose", "sucralose"],
+    ["shellac", "pharmaceutical glaze"],
+    ["lanolin", "anhydrous lanolin"],
+    ["beeswax", "yellow wax"],
+  ];
+  it.each(pos)("%s matches %j", (id, text) => {
+    expect(state(id, text)).toBe("contains");
+  });
+
+  const neg: Array<[string, string]> = [
+    ["phenol", "phenoxyethanol, water"], // phenol must not match phenoxyethanol
+    ["bha", "magnesium stearate, talc"],
+    ["xylitol", "sorbitol, glycerin"],
+    ["beeswax", "carnauba wax"], // generic 'wax' was filtered; beeswax-specific only
+  ];
+  it.each(neg)("%s does NOT match %j", (id, text) => {
+    expect(state(id, text)).toBe("not_listed");
+  });
+});
+
+describe("findAllergenByText resolver (typed terms reach the dictionary)", () => {
+  it("resolves by alias / shortLabel / label", () => {
+    expect(findAllergenByText("erythrosine")?.id).toBe("red-3");
+    expect(findAllergenByText("BHA")?.id).toBe("bha");
+    expect(findAllergenByText("Iron Oxides")?.id).toBe("iron-oxides");
+    expect(findAllergenByText("titanium dioxide")?.id).toBe("titanium-dioxide");
+  });
+  it("returns undefined for unknown terms (caller falls back to ad-hoc)", () => {
+    expect(findAllergenByText("zzznotathing")).toBeUndefined();
   });
 });
 
