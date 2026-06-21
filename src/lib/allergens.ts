@@ -11,10 +11,33 @@ import type { AllergenDef } from "./types";
  *  - `redFlags` -> AMBIGUOUS (amber) unless an adjacent `redFlagSuppressors`
  *    word neutralises it (e.g. "corn starch" is not amber for gluten)
  */
-export const DICTIONARY_VERSION = "1.1.0";
-export const DICTIONARY_UPDATED = "2026-06-15";
+export const DICTIONARY_VERSION = "1.2.0";
+export const DICTIONARY_UPDATED = "2026-06-22";
 
 export const ALLERGENS: AllergenDef[] = [
+  {
+    // ONE "any synthetic dye" option — declutters the chip row vs a chip per color.
+    // The FD&C/D&C prefix catches virtually all certified synthetic colors + lakes.
+    id: "dyes",
+    label: "Synthetic dyes (FD&C / D&C colors)",
+    shortLabel: "Dyes",
+    blurb: "Any artificial color — FD&C/D&C dyes like Yellow 5, Red 40, Blue 1 (incl. aluminum lakes).",
+    chip: true,
+    includes: [
+      /fd\s*&\s*c\b/,
+      /\bd\s*&\s*c\b/,
+      /tartrazine/,
+      /erythrosine?/,
+      /indigotine/,
+      /indigo\s+carmine/,
+      /brilliant\s+blue/,
+      /fast\s+green/,
+      /sunset\s+yellow/,
+      /allura\s+red/,
+      /quinoline\s+yellow/,
+      /phloxine\s+b/,
+    ],
+  },
   {
     id: "peg",
     label: "PEG (polyethylene glycol)",
@@ -53,7 +76,7 @@ export const ALLERGENS: AllergenDef[] = [
     label: "Yellow 5 (tartrazine)",
     shortLabel: "Yellow 5",
     blurb: "FD&C Yellow No. 5 / tartrazine — a dye linked to sensitivity reactions.",
-    chip: true,
+    chip: false, // covered by the "Dyes" group chip
     includes: [
       /tartrazine/,
       /fd\s*&\s*c\s+yellow\s+(?:no\.?\s*|#\s*)?5/, // FD&C Yellow No. 5 / #5
@@ -66,7 +89,7 @@ export const ALLERGENS: AllergenDef[] = [
     label: "Red 40 (Allura Red)",
     shortLabel: "Red 40",
     blurb: "FD&C Red No. 40 / Allura Red — a common synthetic colorant (incl. aluminum lakes).",
-    chip: true,
+    chip: false, // covered by the "Dyes" group chip
     includes: [
       /fd\s*&\s*c\s+red\s+(?:no\.?\s*|#\s*)?40/,
       /\bred\s+(?:no\.?\s*|#\s*)?40\b/,
@@ -152,7 +175,7 @@ export const ALLERGENS: AllergenDef[] = [
     label: "Titanium dioxide",
     shortLabel: "Titanium dioxide",
     blurb: "A white colorant/opacifier (E171), banned in EU food. Common in tablet coatings.",
-    chip: true,
+    chip: false,
     includes: [/titanium\s+dioxide/, /\be\s?171\b/, /ci\s?77891/],
   },
   {
@@ -167,6 +190,7 @@ export const ALLERGENS: AllergenDef[] = [
     label: "Peanut",
     shortLabel: "Peanut",
     blurb: "Peanut (arachis / groundnut) oil appears in some injectables and softgels.",
+    chip: true,
     includes: [/peanuts?/, /arachis/, /groundnut/],
   },
   {
@@ -225,6 +249,7 @@ export const ALLERGENS: AllergenDef[] = [
     label: "Milk (dairy protein)",
     shortLabel: "Milk protein",
     blurb: "Milk proteins (casein, whey) — for a milk allergy, which is different from lactose intolerance.",
+    chip: true,
     includes: [/\bmilk\b/, "milk protein", /caseinates?/, /\bcasein\b/, /\bwhey\b/, /lactalbumin/],
   },
   {
@@ -232,6 +257,7 @@ export const ALLERGENS: AllergenDef[] = [
     label: "Egg",
     shortLabel: "Egg",
     blurb: "Egg-derived ingredients such as egg lecithin, ovalbumin, or lysozyme.",
+    chip: true,
     includes: [/\beggs?\b/, /ovalbumin/, /lysozyme/],
   },
   {
@@ -430,6 +456,174 @@ export const ALLERGENS: AllergenDef[] = [
     shortLabel: "Beeswax",
     blurb: "A wax made by honeybees, so people who avoid animal products often skip it.",
     includes: ["beeswax", "yellow wax", "white wax", "yellow beeswax", "white beeswax", "cera alba", "cera flava", "e 901", "e901"],
+  },
+  // --- round-2 triple-checked additions (tree nuts / shellfish-fish / seaweed / sweeteners / more dyes) ---
+  {
+    id: "dc-red-33",
+    label: "D&C Red No. 33",
+    shortLabel: "D&C Red 33",
+    blurb: "A pink-red dye some people want to avoid because they react to artificial colors.",
+    includes: ["d&c red no. 33", "d&c red #33", "d&c red 33", "acid fuchsin d"],
+  },
+  {
+    id: "dc-green-5",
+    label: "D&C Green No. 5",
+    shortLabel: "D&C Green 5",
+    blurb: "A green dye some people skip if synthetic colors upset their stomach or skin.",
+    includes: ["d&c green no. 5", "d&c green #5", "d&c green 5"],
+  },
+  {
+    id: "dc-green-6",
+    label: "D&C Green No. 6",
+    shortLabel: "D&C Green 6",
+    blurb: "A green dye people avoid mainly to stay away from all artificial colors.",
+    includes: ["d&c green no. 6", "d&c green #6", "d&c green 6"],
+  },
+  {
+    id: "dc-orange-4",
+    label: "D&C Orange No. 4",
+    shortLabel: "D&C Orange 4",
+    blurb: "An orange dye some people avoid because artificial colors can trigger reactions.",
+    includes: ["d&c orange no. 4", "d&c orange #4", "d&c orange 4"],
+  },
+  {
+    id: "dc-violet-2",
+    label: "D&C Violet No. 2",
+    shortLabel: "D&C Violet 2",
+    blurb: "A purple dye some people skip if they try to avoid all synthetic colorings.",
+    includes: ["d&c violet no. 2", "d&c violet #2", "d&c violet 2"],
+  },
+  {
+    id: "coconut-oil",
+    label: "Coconut oil (and hydrogenated/fractionated coconut oil)",
+    shortLabel: "Coconut oil",
+    blurb: "People with a coconut allergy avoid it; it comes from coconut.",
+    includes: ["coconut oil", "hydrogenated coconut oil", "fractionated coconut oil", "coconut oil, hydrogenated", "refined coconut oil"],
+  },
+  {
+    id: "almond-oil",
+    label: "Sweet almond oil",
+    shortLabel: "Almond oil",
+    blurb: "Pressed from almonds, so people with a tree nut allergy avoid it.",
+    includes: ["almond oil", "sweet almond oil", "prunus amygdalus dulcis oil", "prunus amygdalus dulcis (sweet almond) oil", "oil, almond"],
+  },
+  {
+    id: "shea-butter",
+    label: "Shea butter",
+    shortLabel: "Shea butter",
+    blurb: "A thick butter from the shea tree nut that some allergic people skip.",
+    includes: ["shea butter", "butyrospermum parkii butter", "butyrospermum parkii (shea butter)", "shea butter (butyrospermum parkii)"],
+  },
+  {
+    id: "chitosan",
+    label: "Chitosan (shellfish-derived)",
+    shortLabel: "Chitosan",
+    blurb: "Made from shrimp and crab shells, so people with shellfish allergy may want to avoid it.",
+    includes: ["chitosan hydrochloride", "chitosan hcl", "chitosan glutamate", "carboxymethyl chitosan"],
+    redFlags: ["chitosan"],
+  },
+  {
+    id: "glucosamine",
+    label: "Glucosamine (shellfish-derived)",
+    shortLabel: "Glucosamine",
+    blurb: "Often made from crab and shrimp shells, which can be a problem for people allergic to shellfish.",
+    includes: ["glucosamine hydrochloride", "glucosamine hcl", "n-acetyl glucosamine"],
+    redFlags: ["glucosamine", "glucosamine sulfate", "glucosamine sulphate"],
+  },
+  {
+    id: "fish-gelatin",
+    label: "Fish gelatin",
+    shortLabel: "Fish gelatin",
+    blurb: "A jelly-like ingredient made from fish skin and bones that people with fish allergy avoid.",
+    includes: ["fish gelatin", "fish gelatine", "piscine gelatin", "fish-derived gelatin"],
+    redFlags: ["gelatin (fish)"],
+  },
+  {
+    id: "fish-oil",
+    label: "Fish oil / Omega-3 (marine-derived)",
+    shortLabel: "Fish oil",
+    blurb: "Oil pressed from fish, so people allergic to fish or who avoid animal products skip it.",
+    includes: ["fish oil", "omega-3 acid", "omega-3-acid ethyl esters", "fish oil triglycerides", "menhaden oil", "cod liver oil", "marine oil"],
+    redFlags: ["omega-3 acid ethyl esters", "omega-3 fatty acids", "omega 3", "docosahexaenoic acid", "eicosapentaenoic acid"],
+  },
+  {
+    id: "sodium-alginate",
+    label: "Sodium alginate (seaweed-derived)",
+    shortLabel: "Sodium alginate",
+    blurb: "A thickener made from brown seaweed that some people avoid for diet or allergy reasons.",
+    includes: ["sodium alginate", "e 401", "potassium alginate", "e 402", "calcium alginate", "propylene glycol alginate"],
+    redFlags: ["alginate", "alginic acid"],
+  },
+  {
+    id: "carrageenan",
+    label: "Carrageenan (seaweed-derived)",
+    shortLabel: "Carrageenan",
+    blurb: "A thickener from red seaweed that some people avoid because it may upset the stomach.",
+    includes: ["carrageenan", "carageenan", "e 407", "carrageenan (chondrus crispus)"],
+  },
+  {
+    id: "agar",
+    label: "Agar (seaweed-derived)",
+    shortLabel: "Agar",
+    blurb: "A jelly-like ingredient made from seaweed that some people prefer to avoid in their diet.",
+    includes: ["agar", "agar-agar", "e 406"],
+  },
+  {
+    id: "stevia",
+    label: "Stevia / Steviol Glycosides",
+    shortLabel: "Stevia",
+    blurb: "A plant-based sweetener some people skip because it can taste bitter or upset their stomach.",
+    includes: ["stevia", "steviol glycosides", "steviol glycoside", "stevia extract", "rebaudioside a", "rebaudioside", "rebiana", "stevioside", "stevia rebaudiana", "e 960"],
+  },
+  {
+    id: "neotame",
+    label: "Neotame",
+    shortLabel: "Neotame",
+    blurb: "A very strong artificial sweetener that a few people prefer to avoid in their medicine.",
+    includes: ["neotame", "e 961", "newtame"],
+  },
+  {
+    id: "cyclamate",
+    label: "Cyclamate / Sodium Cyclamate",
+    shortLabel: "Cyclamate",
+    blurb: "An artificial sweetener that some people avoid because it is banned in certain countries.",
+    includes: ["cyclamate", "sodium cyclamate", "calcium cyclamate", "cyclamic acid", "e 952"],
+  },
+  {
+    id: "dextrose",
+    label: "Dextrose / Glucose",
+    shortLabel: "Dextrose",
+    blurb: "A simple sugar that people with diabetes or on low-sugar diets often try to limit.",
+    includes: ["dextrose", "dextrose monohydrate", "anhydrous dextrose", "glucose liquid", "liquid glucose", "d-glucose"],
+    redFlags: ["glucose"],
+  },
+  {
+    id: "erythritol",
+    label: "Erythritol",
+    shortLabel: "Erythritol",
+    blurb: "A sugar substitute that can cause gas or bloating and that some studies have raised heart concerns about.",
+    includes: ["erythritol", "e 968"],
+  },
+  {
+    id: "dextrates",
+    label: "Dextrates",
+    shortLabel: "Dextrates",
+    blurb: "A sugar-based filler made from starch that people watching their sugar may want to avoid.",
+    includes: ["dextrates", "dextrates, unspecified form", "dextrates, hydrated", "dextrates hydrated"],
+  },
+  {
+    id: "propyl-gallate",
+    label: "Propyl gallate",
+    shortLabel: "Propyl gallate",
+    blurb: "An antioxidant some people avoid because it can cause allergic skin reactions and stomach upset.",
+    includes: ["propyl gallate", "propyl gallate nf", "n-propyl gallate", "gallic acid propyl ester"],
+  },
+  {
+    id: "na-propionate",
+    label: "Sodium propionate",
+    shortLabel: "Na propionate",
+    blurb: "A preservative that a few people react to with headaches or skin rashes.",
+    includes: ["sodium propionate", "sodium propionate anhydrous", "e 281"],
   },
 ];
 

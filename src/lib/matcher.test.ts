@@ -328,6 +328,43 @@ describe("findAllergenByText resolver (typed terms reach the dictionary)", () =>
   });
 });
 
+describe("matcher — round-2 additions + Dyes group", () => {
+  const pos: Array<[string, string]> = [
+    ["dyes", "FD&C Yellow No. 5, magnesium stearate"], // group catches any FD&C
+    ["dyes", "D&C Red No. 33"],
+    ["dyes", "contains allura red and brilliant blue fcf"],
+    ["dc-red-33", "d&c red no. 33"],
+    ["coconut-oil", "fractionated coconut oil"],
+    ["almond-oil", "sweet almond oil"],
+    ["chitosan", "chitosan hydrochloride"],
+    ["fish-oil", "menhaden oil"],
+    ["carrageenan", "carrageenan, water"],
+    ["stevia", "steviol glycosides"],
+    ["dextrose", "dextrose monohydrate"],
+  ];
+  it.each(pos)("%s matches %j", (id, text) => {
+    expect(state(id, text)).toBe("contains");
+  });
+
+  it("Dyes group does NOT fire on a dye-free label", () => {
+    expect(state("dyes", "microcrystalline cellulose, magnesium stearate, talc")).toBe("not_listed");
+  });
+  it("Dyes group does NOT mis-fire on natural carmine (not FD&C/D&C)", () => {
+    expect(state("dyes", "carmine, gelatin")).toBe("not_listed");
+  });
+  it("chip row stays small for glanceability (<= 10 chips)", () => {
+    const chips = ALLERGENS.filter((a) => a.chip);
+    expect(chips.length).toBeLessThanOrEqual(10);
+    expect(chips.length).toBeGreaterThanOrEqual(7);
+  });
+  it("the most-common allergens are chips", () => {
+    const chipIds = new Set(ALLERGENS.filter((a) => a.chip).map((a) => a.id));
+    for (const id of ["dyes", "gluten", "lactose", "peg", "soy", "peanut", "egg", "milk", "gelatin"]) {
+      expect(chipIds.has(id)).toBe(true);
+    }
+  });
+});
+
 describe("dictionary integrity", () => {
   it("every allergen has a unique id and non-empty includes", () => {
     const ids = new Set<string>();
