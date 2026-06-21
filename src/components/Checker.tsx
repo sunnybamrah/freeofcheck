@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { CHIP_ALLERGENS, adHocAllergen, getAllergen, findAllergenByText } from "../lib/allergens";
 import { checkDrug, fetchSuggestions, ApiClientError } from "../lib/api";
 import { POPULAR_DRUGS, localDrugSuggest } from "../content/drugs";
+import { findVaccineByName, VACCINE_BRANDS } from "../content/vaccines";
 import type { CheckResponse } from "../lib/types";
 import { S } from "../content/strings";
 import { ResultsList, type SearchState } from "./ResultsList";
@@ -43,9 +44,17 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
         if (view.status === "ok") return; // ingredient switch is client-side only
       }
       abortRef.current?.abort();
+      setShowSug(false);
+      // Vaccines aren't in openFDA — resolve them from the bundled CDC/FDA data
+      // (instant, no network call).
+      const vax = findVaccineByName(drug);
+      if (vax) {
+        setCommittedDrug(drug);
+        setView({ status: "vaccine", vaccine: vax });
+        return;
+      }
       const ctrl = new AbortController();
       abortRef.current = ctrl;
-      setShowSug(false);
       setView({ status: "loading" });
       try {
         const r: CheckResponse = await checkDrug(drug, ctrl.signal);
@@ -102,7 +111,11 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
       setShowSug(false);
       return;
     }
-    const local = localDrugSuggest(q);
+    const ql = q.toLowerCase();
+    const vax = VACCINE_BRANDS.filter((b) => b.toLowerCase().includes(ql));
+    const local = [...vax, ...localDrugSuggest(q)]
+      .filter((v, i, a) => a.findIndex((x) => x.toLowerCase() === v.toLowerCase()) === i)
+      .slice(0, 8);
     setSuggestions(local);
     setShowSug(local.length > 0);
     const ctrl = new AbortController();

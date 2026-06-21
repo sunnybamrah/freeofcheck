@@ -116,4 +116,9 @@ export const S = {
 
   freshness:
     "Label data from openFDA, refreshed weekly. Newer reformulations may not be reflected — the definitive source is the current package insert.",
+
+  vaccine: {
+    sourceNote:
+      "Vaccines aren't in the FDA drug-label database, so this comes from published excipient data (CDC Pink Book / Institute for Vaccine Safety / the FDA package insert), not a live label. Ingredients can change by lot and version — confirm with the package insert or your provider before relying on this, especially for a serious allergy.",
+  },
 } as const;

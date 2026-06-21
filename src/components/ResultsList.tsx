@@ -3,14 +3,17 @@ import type { AllergenDef, CheckResponse } from "../lib/types";
 import { buildVerdictCards, sortCards, summarize } from "../lib/verdict";
 import { S } from "../content/strings";
 import { VerdictCard } from "./VerdictCard";
+import { VaccineResult } from "./VaccineResult";
 import { SkeletonCards } from "./Skeleton";
 import { HelpCircle } from "./Icons";
+import type { Vaccine } from "../content/vaccines";
 
 export type SearchState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "error"; message: string }
   | { status: "nomatch"; drug: string; suggestions: string[] }
+  | { status: "vaccine"; vaccine: Vaccine }
   | { status: "ok"; response: CheckResponse };
 
 interface Props {
@@ -35,6 +38,14 @@ export function ResultsList(props: Props) {
         drug={state.drug}
         suggestions={state.suggestions}
         onPick={props.onPickSuggestion}
+      />
+    );
+  if (state.status === "vaccine")
+    return (
+      <VaccineResult
+        vaccine={state.vaccine}
+        allergen={props.allergen}
+        ingredientLabel={props.ingredientLabel}
       />
     );
   return <OkState {...props} response={state.response} />;
