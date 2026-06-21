@@ -70,9 +70,10 @@ test("axe clean: results state (all four verdict colors on screen)", async ({ pa
   await page.goto("/");
   await dismissIntro(page);
   await page.getByLabel("Medicine name").fill("ibuprofen");
+  await page.keyboard.press("Escape"); // close the instant autocomplete dropdown
   // gluten -> produces amber (pregelatinized starch) + green + no-data
   await page.getByRole("button", { name: "Gluten", exact: true }).click();
-  await page.getByRole("button", { name: /Check the label/i }).click();
+  await page.getByRole("button", { name: /Check the FDA label/i }).click();
   await page.getByText(/no ingredient list|not listed|Possibly contains|Contains/i).first().waitFor();
   // expand a source passage so the monospace block is on screen too
   await page.getByRole("button", { name: /Show FDA source/i }).first().click();

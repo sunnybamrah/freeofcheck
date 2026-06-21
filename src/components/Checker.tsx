@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CHIP_ALLERGENS, adHocAllergen, getAllergen, findAllergenByText } from "../lib/allergens";
 import { checkDrug, fetchSuggestions, ApiClientError } from "../lib/api";
+import { POPULAR_DRUGS, localDrugSuggest } from "../content/drugs";
 import type { CheckResponse } from "../lib/types";
 import { S } from "../content/strings";
 import { ResultsList, type SearchState } from "./ResultsList";
@@ -92,18 +93,28 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Debounced type-ahead suggestions.
+  // Type-ahead: INSTANT local suggestions from the bundled drug list (no network
+  // wait), then merged with live openFDA suggestions when they arrive.
   useEffect(() => {
     const q = drugInput.trim();
     if (q.length < 2 || q.toLowerCase() === committedDrug.toLowerCase()) {
       setSuggestions([]);
+      setShowSug(false);
       return;
     }
+    const local = localDrugSuggest(q);
+    setSuggestions(local);
+    setShowSug(local.length > 0);
     const ctrl = new AbortController();
     const t = setTimeout(async () => {
-      const s = await fetchSuggestions(q, ctrl.signal);
-      setSuggestions(s);
-      setShowSug(s.length > 0);
+      const api = await fetchSuggestions(q, ctrl.signal);
+      const merged = [...local];
+      for (const n of api) {
+        if (!merged.some((m) => m.toLowerCase() === n.toLowerCase())) merged.push(n);
+      }
+      const out = merged.slice(0, 8);
+      setSuggestions(out);
+      setShowSug(out.length > 0);
     }, 250);
     return () => {
       clearTimeout(t);
@@ -162,6 +173,10 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
             placeholder={S.home.drugPlaceholder}
             onChange={(e) => setDrugInput(e.target.value)}
             onFocus={() => suggestions.length && setShowSug(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setShowSug(false);
+            }}
+            onBlur={() => setTimeout(() => setShowSug(false), 150)}
             className="mt-1 min-h-[48px] w-full rounded-xl border border-hairline bg-surface px-4 text-body text-ink placeholder:text-muted/70"
           />
           {showSug && suggestions.length > 0 && (
@@ -246,6 +261,32 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
           {pharmacistView ? `✓ ${S.pharmacistView.on}` : S.pharmacistView.toggle}
         </button>
       </div>
+
+      {/* Popular medicines — tap to check, so a general user doesn't have to know
+          what to type. Shown before any search. */}
+      {view.status === "idle" && (
+        <section className="mt-4">
+          <p className="mb-2 text-caption font-semibold uppercase tracking-wide text-muted">
+            Popular medicines
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {POPULAR_DRUGS.map((pd) => (
+              <button
+                key={pd.name}
+                type="button"
+                onClick={() => {
+                  setDrugInput(pd.name);
+                  runSearch(pd.name, true);
+                }}
+                className="min-h-[40px] rounded-full border border-hairline bg-surface px-3.5 text-body text-ink"
+              >
+                {pd.name}
+                {pd.hint ? <span className="text-muted"> · {pd.hint}</span> : null}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="mt-4">
         <ResultsList

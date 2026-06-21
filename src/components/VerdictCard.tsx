@@ -42,15 +42,6 @@ export function VerdictCard({ card, ingredientLabel, pharmacistView = false }: P
         ? "bg-verdict-warnText/25 text-ink"
         : "";
 
-  const caveat =
-    card.state === "not_listed"
-      ? S.verdict.notListedCaveat(ingredientLabel)
-      : card.state === "ambiguous"
-        ? S.verdict.ambiguousCaveat
-        : card.state === "no_data"
-          ? S.verdict.noDataCaveat
-          : "";
-
   return (
     <article className="relative overflow-hidden rounded-2xl border border-hairline bg-surface">
       <span className={`absolute inset-y-0 left-0 w-1 ${d.accent}`} aria-hidden="true" />
@@ -74,11 +65,9 @@ export function VerdictCard({ card, ingredientLabel, pharmacistView = false }: P
 
         {found && <p className="mt-2 text-body text-ink">{found}</p>}
 
-        {card.state === "contains" && (
-          <p className="mt-2 text-caption text-muted">{S.verdict.containsNext(ingredientLabel)}</p>
-        )}
-
-        {caveat && <p className="mt-2 text-caption text-muted">{caveat}</p>}
+        {/* Per-card caveats removed (Council: one warning, not four). Safety is
+            carried by the scoped verdict text ("…not listed on this label") +
+            the single persistent footer disclaimer + the one results reminder. */}
 
         {card.hasIngredientData && (
           <div className="mt-3">

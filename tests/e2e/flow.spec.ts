@@ -62,8 +62,9 @@ test.describe("FreeOfCheck full flow (mobile)", () => {
     await dismissIntro(page);
 
     await page.getByLabel("Medicine name").fill("ibuprofen");
+    await page.keyboard.press("Escape"); // close the instant autocomplete dropdown
     await page.getByRole("button", { name: "Lactose", exact: true }).click();
-    await page.getByRole("button", { name: /Check the label/i }).click();
+    await page.getByRole("button", { name: /Check the FDA label/i }).click();
 
     // Contains card renders
     await expect(page.getByText(/Contains Lactose/i)).toBeVisible();
@@ -72,9 +73,10 @@ test.describe("FreeOfCheck full flow (mobile)", () => {
     // count summary mentions a Contains result (never hidden)
     await expect(page.getByText(/contain it/i)).toBeVisible();
 
-    // expand the verbatim FDA source
-    await page.getByRole("button", { name: /Show FDA source/i }).first().click();
-    await expect(page.getByText(/lactose monohydrate/i).first()).toBeVisible();
+    // expand the Contains card's verbatim FDA source; matched ingredient is highlighted
+    const containsCard = page.locator("article").filter({ hasText: "Contains Lactose" });
+    await containsCard.getByRole("button", { name: /Show FDA source/i }).click();
+    await expect(containsCard.locator("mark").filter({ hasText: /lactose/i }).first()).toBeVisible();
 
     // DailyMed deep link present
     const link = page.getByRole("link", { name: /DailyMed/i }).first();
@@ -95,8 +97,9 @@ test.describe("FreeOfCheck full flow (mobile)", () => {
     await page.goto("/");
     await dismissIntro(page);
     await page.getByLabel("Medicine name").fill("ibuprofen");
+    await page.keyboard.press("Escape"); // close the instant autocomplete dropdown
     await page.getByRole("button", { name: "Lactose", exact: true }).click();
-    await page.getByRole("button", { name: /Check the label/i }).click();
+    await page.getByRole("button", { name: /Check the FDA label/i }).click();
     await expect(page.getByText(/Contains Lactose/i)).toBeVisible();
 
     // switch to PEG — should NOT trigger another /api/check
@@ -121,7 +124,7 @@ test.describe("FreeOfCheck full flow (mobile)", () => {
     await page.goto("/");
     await dismissIntro(page);
     await page.getByLabel("Medicine name").fill("ibuprofen");
-    await page.getByRole("button", { name: /Check the label/i }).click();
+    await page.getByRole("button", { name: /Check the FDA label/i }).click();
     await expect(page.getByText(/Searching official FDA labels/i)).toBeVisible();
     await expect(page.getByTestId("disclaimer")).toBeVisible();
   });
@@ -137,7 +140,7 @@ test.describe("FreeOfCheck full flow (mobile)", () => {
     await page.goto("/");
     await dismissIntro(page);
     await page.getByLabel("Medicine name").fill("ibuprofun");
-    await page.getByRole("button", { name: /Check the label/i }).click();
+    await page.getByRole("button", { name: /Check the FDA label/i }).click();
     await expect(page.getByText(/couldn't find a medicine/i)).toBeVisible();
     await expect(page.getByRole("button", { name: "Ibuprofen" })).toBeVisible();
     await expect(page.getByTestId("disclaimer")).toBeVisible();
@@ -151,7 +154,7 @@ test.describe("FreeOfCheck full flow (mobile)", () => {
     await page.goto("/");
     await dismissIntro(page);
     await page.getByLabel("Medicine name").fill("ibuprofen");
-    await page.getByRole("button", { name: /Check the label/i }).click();
+    await page.getByRole("button", { name: /Check the FDA label/i }).click();
     await expect(page.getByText(/couldn't reach the FDA database/i).first()).toBeVisible();
     await expect(page.getByRole("button", { name: /Try again/i })).toBeVisible();
     await expect(page.getByTestId("disclaimer")).toBeVisible();

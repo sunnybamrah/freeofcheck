@@ -9,14 +9,14 @@ export const S = {
   taglineAlt: "Type a med. Pick what to avoid. See the label.",
 
   home: {
-    h1: "Check what's in your medicine",
-    intro: "Type a medicine and pick an ingredient you want to avoid. We'll read the official FDA label and show you, with the exact label text.",
+    h1: "Check an FDA label for an ingredient to avoid",
+    intro: "Search a medicine, pick what to avoid, and see the exact FDA label text. Free, no sign-in.",
     drugLabel: "Medicine name",
     drugPlaceholder: "e.g., ibuprofen, Children's Tylenol",
     ingredientLabel: "Ingredient to avoid",
     ingredientHint: "Pick one, or type your own",
     customPlaceholder: "Type another ingredient…",
-    checkButton: "Check the label",
+    checkButton: "Check the FDA label",
     emptyHint: "Type a medicine and choose an ingredient to begin.",
   },
 

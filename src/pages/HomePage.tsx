@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import { Layout } from "../components/Layout";
-import { IntroModal } from "../components/IntroModal";
 import { Checker } from "../components/Checker";
 import { TrustPanel } from "../components/TrustPanel";
 import { FaqList } from "../components/ContentPageView";
-import { AlertTriangle } from "../components/Icons";
 import { S } from "../content/strings";
 import { HOW_IT_WORKS, FAQ } from "../content/pages";
 
 export function HomePage() {
   return (
     <Layout>
-      <IntroModal />
+      {/* Glanceable hero: title + one plain line + the action. No intro pop-up,
+          no separate "honesty box" — the single persistent disclaimer (footer)
+          and the one results-level reminder carry safety without clutter. */}
       <section>
         <h1 className="text-h1 text-ink">{S.home.h1}</h1>
         <p className="mt-2 text-body text-muted">{S.home.intro}</p>
@@ -20,22 +20,6 @@ export function HomePage() {
       <div className="mt-5">
         <Checker />
       </div>
-
-      {/* Honesty / limits box */}
-      <section className="mt-8 rounded-2xl border border-hairline bg-surface p-5">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="text-verdict-warnText" size={20} />
-          <h2 className="text-h2 text-ink">What this can and can't tell you</h2>
-        </div>
-        <p className="mt-2 text-body text-muted">
-          FDA labels list what a medicine <strong>contains</strong>, not what it is free of. So we can prove
-          “Contains”, and we can say an ingredient is “not listed on this label” — but a missing ingredient is
-          never a guarantee.{" "}
-          <Link to="/why-not-safe" className="text-trust">
-            Here's why we never say “safe”.
-          </Link>
-        </p>
-      </section>
 
       {/* How it works */}
       <section className="mt-8">

@@ -49,11 +49,14 @@ describe("VerdictCard", () => {
   it("not-listed card shows the mandatory absence caveat and never the words 'free of'", () => {
     const [card] = buildVerdictCards([FIXTURES.cleanTablet], a("lactose"));
     const { container } = render(<VerdictCard card={card} ingredientLabel="Lactose" />);
+    // Safety is now carried by the SCOPED verdict text ("...on this label") +
+    // the persistent footer disclaimer — NOT a repeated per-card caveat (Council:
+    // one warning, not four). The card must still never imply "safe"/"free of".
     expect(screen.getByText(/Lactose not listed on this label/i)).toBeInTheDocument();
-    // never green/checkmark "safe" framing
-    expect(container.textContent?.toLowerCase()).not.toContain("likely free");
-    expect(screen.getByText(/absence from a label is not a guarantee/i)).toBeInTheDocument();
-    expect(container.textContent?.toLowerCase()).not.toContain("free of");
+    const t = container.textContent?.toLowerCase() ?? "";
+    expect(t).not.toContain("likely free");
+    expect(t).not.toContain("free of");
+    expect(t).not.toContain("safe");
   });
 
   it("gluten + ambiguous starch renders the amber 'source not stated' verdict, not green", () => {
