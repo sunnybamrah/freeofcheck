@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { VerdictCard as Card } from "../lib/verdict";
 import { S } from "../content/strings";
 import { VERDICT_DISPLAY } from "./verdictDisplay";
@@ -10,11 +10,37 @@ interface Props {
   pharmacistView?: boolean;
 }
 
+function escapeRe(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Highlight the matched ingredient substrings inside the verbatim FDA passage. */
+function highlight(passage: string, hits: string[], cls: string): ReactNode {
+  const uniq = [...new Set(hits.map((h) => h.trim()).filter(Boolean))];
+  if (uniq.length === 0 || !cls) return passage;
+  const re = new RegExp(`(${uniq.map(escapeRe).join("|")})`, "gi");
+  return passage.split(re).map((part, i) =>
+    i % 2 === 1 ? (
+      <mark key={i} className={`rounded px-0.5 ${cls}`}>
+        {part}
+      </mark>
+    ) : (
+      <span key={i}>{part}</span>
+    ),
+  );
+}
+
 export function VerdictCard({ card, ingredientLabel, pharmacistView = false }: Props) {
   const [open, setOpen] = useState(pharmacistView);
   const d = VERDICT_DISPLAY[card.state];
   const verdictText = S.verdict.label(card.state, ingredientLabel);
   const found = card.state === "contains" || card.state === "ambiguous" ? S.verdict.foundText(card.hits) : "";
+  const hlClass =
+    card.state === "contains"
+      ? "bg-verdict-badText/25 text-ink"
+      : card.state === "ambiguous"
+        ? "bg-verdict-warnText/25 text-ink"
+        : "";
 
   const caveat =
     card.state === "not_listed"
@@ -73,7 +99,7 @@ export function VerdictCard({ card, ingredientLabel, pharmacistView = false }: P
                 <p className="mb-1 text-caption text-muted">FDA label — Inactive Ingredients</p>
                 {card.passages.map((p, i) => (
                   <p key={i} className="font-mono text-source text-ink/90 break-words">
-                    {p}
+                    {highlight(p, card.hits, hlClass)}
                   </p>
                 ))}
               </blockquote>

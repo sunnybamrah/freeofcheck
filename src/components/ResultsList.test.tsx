@@ -39,8 +39,11 @@ describe("VerdictCard", () => {
     expect(btn).toHaveAttribute("aria-expanded", "false");
     fireEvent.click(btn);
     expect(btn).toHaveAttribute("aria-expanded", "true");
-    // text unique to the verbatim source passage (not the "Found on label" line)
-    expect(screen.getByText(/povidone, lactose monohydrate/i)).toBeInTheDocument();
+    // the verbatim FDA source section is shown...
+    expect(screen.getByText(/FDA label — Inactive Ingredients/i)).toBeInTheDocument();
+    // ...with the matched ingredient highlighted (<mark>) inside it
+    const marks = Array.from(document.querySelectorAll("mark"));
+    expect(marks.some((m) => /lactose/i.test(m.textContent || ""))).toBe(true);
   });
 
   it("not-listed card shows the mandatory absence caveat and never the words 'free of'", () => {

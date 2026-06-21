@@ -152,14 +152,16 @@ function OkState({
         </div>
       )}
 
-      {visible.map((card) => (
-        <VerdictCard
-          key={card.key}
-          card={card}
-          ingredientLabel={ingredientLabel}
-          pharmacistView={pharmacistView}
-        />
-      ))}
+      <div key={`${response.query}:${allergen.id}`} className="foc-stagger space-y-3">
+        {visible.map((card) => (
+          <VerdictCard
+            key={card.key}
+            card={card}
+            ingredientLabel={ingredientLabel}
+            pharmacistView={pharmacistView}
+          />
+        ))}
+      </div>
 
       {!pharmacistView && dataCards.length > INITIAL_VISIBLE && (
         <button
