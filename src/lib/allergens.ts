@@ -11,7 +11,7 @@ import type { AllergenDef } from "./types";
  *  - `redFlags` -> AMBIGUOUS (amber) unless an adjacent `redFlagSuppressors`
  *    word neutralises it (e.g. "corn starch" is not amber for gluten)
  */
-export const DICTIONARY_VERSION = "1.2.0";
+export const DICTIONARY_VERSION = "1.3.0";
 export const DICTIONARY_UPDATED = "2026-06-22";
 
 export const ALLERGENS: AllergenDef[] = [
@@ -624,6 +624,49 @@ export const ALLERGENS: AllergenDef[] = [
     shortLabel: "Na propionate",
     blurb: "A preservative that a few people react to with headaches or skin rashes.",
     includes: ["sodium propionate", "sodium propionate anhydrous", "e 281"],
+  },
+  // --- vaccine-relevant allergens ---
+  {
+    id: "yeast",
+    label: "Yeast",
+    shortLabel: "Yeast",
+    blurb: "Baker's/brewer's yeast (Saccharomyces) — used to make Hep B and HPV vaccines; a concern for yeast allergy.",
+    includes: [/\byeast\b/, /saccharomyces/],
+  },
+  {
+    id: "antibiotics",
+    label: "Antibiotics (neomycin, gentamicin, polymyxin)",
+    shortLabel: "Antibiotics",
+    blurb: "Trace antibiotics used in some vaccines and medicines — matters for an antibiotic allergy.",
+    includes: [/neomycin/, /polymyxin/, /gentamicin/, /streptomycin/, /kanamycin/],
+  },
+  {
+    id: "aluminum",
+    label: "Aluminum (adjuvant salts)",
+    shortLabel: "Aluminum",
+    blurb: "Aluminum salts used as an adjuvant in many vaccines and in some antacids.",
+    includes: [/aluminum/, /aluminium/],
+  },
+  {
+    id: "thimerosal",
+    label: "Thimerosal (mercury preservative)",
+    shortLabel: "Thimerosal",
+    blurb: "A mercury-based preservative, now mainly in some multi-dose flu vials.",
+    includes: [/thimerosal/, /thiomersal/],
+  },
+  {
+    id: "formaldehyde",
+    label: "Formaldehyde",
+    shortLabel: "Formaldehyde",
+    blurb: "Used to inactivate viruses/toxins; only trace amounts remain.",
+    includes: [/formaldehyde/, /formalin/],
+  },
+  {
+    id: "latex",
+    label: "Latex (natural rubber)",
+    shortLabel: "Latex",
+    blurb: "Natural rubber latex, sometimes in vial stoppers or syringe parts — a concern for latex allergy.",
+    includes: [/\blatex\b/, /natural rubber/],
   },
 ];
 

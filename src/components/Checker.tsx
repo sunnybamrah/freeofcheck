@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { CHIP_ALLERGENS, adHocAllergen, getAllergen, findAllergenByText } from "../lib/allergens";
 import { checkDrug, fetchSuggestions, ApiClientError } from "../lib/api";
 import { POPULAR_DRUGS, localDrugSuggest } from "../content/drugs";
-import { findVaccineByName, VACCINE_BRANDS } from "../content/vaccines";
+import { findVaccineByName, VACCINE_BRANDS, VACCINE_PICKS } from "../content/vaccines";
 import type { CheckResponse } from "../lib/types";
 import { S } from "../content/strings";
 import { ResultsList, type SearchState } from "./ResultsList";
@@ -295,6 +295,30 @@ export function Checker({ defaultAllergenId }: { defaultAllergenId?: string }) {
               >
                 {pd.name}
                 {pd.hint ? <span className="text-muted"> · {pd.hint}</span> : null}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Common vaccines — checked against bundled CDC/FDA excipient data. */}
+      {view.status === "idle" && VACCINE_PICKS.length > 0 && (
+        <section className="mt-4">
+          <p className="mb-2 text-caption font-semibold uppercase tracking-wide text-muted">
+            Common vaccines
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {VACCINE_PICKS.map((vx) => (
+              <button
+                key={vx.id}
+                type="button"
+                onClick={() => {
+                  setDrugInput(vx.brand);
+                  runSearch(vx.brand, true);
+                }}
+                className="min-h-[40px] rounded-full border border-hairline bg-surface px-3.5 text-body text-ink"
+              >
+                {vx.brand}
               </button>
             ))}
           </div>
