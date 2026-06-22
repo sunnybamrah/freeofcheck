@@ -9,7 +9,7 @@ function apply(theme: "light" | "dark") {
   else el.removeAttribute("data-theme");
   // keep the iOS status-bar tint in sync
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", theme === "dark" ? "#0B0F14" : "#FFFFFF");
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#0B0F14" : "#F2F3F6");
 }
 
 /** Light is the default; this toggles + persists an optional dark mode. */
