@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { S } from "../content/strings";
 import { Disclaimer } from "./Disclaimer";
 import { CheckCircle } from "./Icons";
+import { ThemeToggle } from "./ThemeToggle";
 
 // App shell: minimal wordmark header, content, persistent sticky disclaimer,
 // and a footer with legal links. The home action area stays nav-free (spec §4.3);
@@ -11,13 +12,14 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-base text-ink">
       <header className="sticky top-0 z-30 border-b border-hairline bg-base/80 backdrop-blur-md supports-[backdrop-filter]:bg-base/65">
-        <div className="mx-auto flex max-w-prose items-center gap-2 px-4 py-3">
+        <div className="mx-auto flex max-w-prose items-center justify-between gap-2 px-4 py-3">
           <Link to="/" className="flex items-center gap-2" aria-label={`${S.brand} home`}>
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-verdict-okBg">
               <CheckCircle size={18} className="text-teal" />
             </span>
             <span className="text-h2 font-bold text-ink">{S.brand}</span>
           </Link>
+          <ThemeToggle />
         </div>
       </header>
 

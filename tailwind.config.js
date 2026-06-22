@@ -5,27 +5,27 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      // All colors are theme variables (rgb triples in src/index.css). LIGHT is
+      // the default (:root); DARK applies under [data-theme="dark"].
       colors: {
-        base: "#0B0F14", // near-black blue-gray background
-        surface: "#141A21", // elevated cards
-        hairline: "#1F2933", // dividers / card borders
-        trust: "#3B82F6", // trust-blue for links/text/focus on dark bg (passes 4.5:1)
-        trustBtn: "#2563EB", // darker blue for FILLED buttons w/ white text (5.17:1)
-        accent: "#1E3A5F", // deep-blue header accent
-        teal: "#34D399", // safe/healthy green accent
-        ink: "#F1F5F9", // text primary
-        muted: "#94A3B8", // text secondary / captions
-        // Verdict states
+        base: "rgb(var(--c-base) / <alpha-value>)",
+        surface: "rgb(var(--c-surface) / <alpha-value>)",
+        hairline: "rgb(var(--c-hairline) / <alpha-value>)",
+        trust: "rgb(var(--c-trust) / <alpha-value>)",
+        trustBtn: "rgb(var(--c-trustBtn) / <alpha-value>)",
+        accent: "rgb(var(--c-accent) / <alpha-value>)",
+        teal: "rgb(var(--c-teal) / <alpha-value>)",
+        ink: "rgb(var(--c-ink) / <alpha-value>)",
+        muted: "rgb(var(--c-muted) / <alpha-value>)",
         verdict: {
-          // "Not listed" is a NEUTRAL finding, never green/safe (safety review).
-          okText: "#9CC2E8",
-          okBg: "#17222F",
-          badText: "#F87171",
-          badBg: "#2A1416",
-          warnText: "#FBBF24",
-          warnBg: "#2A220F",
-          noneText: "#94A3B8",
-          noneBg: "#1B232B",
+          okText: "rgb(var(--c-okText) / <alpha-value>)",
+          okBg: "rgb(var(--c-okBg) / <alpha-value>)",
+          badText: "rgb(var(--c-badText) / <alpha-value>)",
+          badBg: "rgb(var(--c-badBg) / <alpha-value>)",
+          warnText: "rgb(var(--c-warnText) / <alpha-value>)",
+          warnBg: "rgb(var(--c-warnBg) / <alpha-value>)",
+          noneText: "rgb(var(--c-noneText) / <alpha-value>)",
+          noneBg: "rgb(var(--c-noneBg) / <alpha-value>)",
         },
       },
       fontFamily: {

@@ -77,6 +77,30 @@ test("axe clean: results state (all four verdict colors on screen)", async ({ pa
   await page.getByText(/no ingredient list|not listed|Possibly contains|Contains/i).first().waitFor();
   // expand a source passage so the monospace block is on screen too
   await page.getByRole("button", { name: /Show FDA source/i }).first().click();
+  await page.waitForTimeout(350); // let the entrance animation / dropdown settle
   const results = await new AxeBuilder({ page }).withTags(TAGS).analyze();
   expect(results.violations, summarize(results.violations)).toEqual([]);
+});
+
+// Dark mode (opt-in) must also be axe-clean.
+test("axe clean: dark theme (home + results)", async ({ page }) => {
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem("foc_theme", "dark");
+    } catch (e) {
+      void e;
+    }
+  });
+  await page.route("**/api/suggest*", (r) => r.fulfill({ json: { suggestions: [] } }));
+  await page.route("**/api/check*", (r) => r.fulfill({ json: CHECK_RESPONSE }));
+  await page.goto("/");
+  await dismissIntro(page);
+  let results = await new AxeBuilder({ page }).withTags(TAGS).analyze();
+  expect(results.violations, "dark home: " + summarize(results.violations)).toEqual([]);
+
+  await page.goto("/?drug=ibuprofen&avoid=gluten");
+  await page.getByText(/not listed|Possibly contains|Contains|no ingredient list/i).first().waitFor();
+  await page.waitForTimeout(350);
+  results = await new AxeBuilder({ page }).withTags(TAGS).analyze();
+  expect(results.violations, "dark results: " + summarize(results.violations)).toEqual([]);
 });

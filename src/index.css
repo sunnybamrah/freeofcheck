@@ -3,14 +3,54 @@
 @tailwind utilities;
 
 @layer base {
+  /* LIGHT theme = default (white, to match the other apps). Values are RGB
+     triples consumed by Tailwind as rgb(var(--c-*) / <alpha>). */
   :root {
+    color-scheme: light;
+    --c-base: 255 255 255;
+    --c-surface: 245 246 248;
+    --c-hairline: 226 229 234;
+    --c-trust: 37 99 235;
+    --c-trustBtn: 37 99 235;
+    --c-accent: 219 231 250;
+    --c-teal: 13 148 100;
+    --c-ink: 17 24 39;
+    --c-muted: 90 100 115;
+    --c-okText: 30 78 140; /* "not listed" — neutral slate-blue, never green */
+    --c-okBg: 233 241 251;
+    --c-badText: 180 35 24;
+    --c-badBg: 254 233 231;
+    --c-warnText: 138 90 0;
+    --c-warnBg: 253 243 214;
+    --c-noneText: 71 85 105;
+    --c-noneBg: 238 241 244;
+  }
+
+  [data-theme="dark"] {
     color-scheme: dark;
+    --c-base: 11 15 20;
+    --c-surface: 20 26 33;
+    --c-hairline: 31 41 51;
+    --c-trust: 59 130 246;
+    --c-trustBtn: 37 99 235;
+    --c-accent: 30 58 95;
+    --c-teal: 52 211 153;
+    --c-ink: 241 245 249;
+    --c-muted: 148 163 184;
+    --c-okText: 156 194 232;
+    --c-okBg: 23 34 47;
+    --c-badText: 248 113 113;
+    --c-badBg: 42 20 22;
+    --c-warnText: 251 191 36;
+    --c-warnBg: 42 34 15;
+    --c-noneText: 148 163 184;
+    --c-noneBg: 27 35 43;
   }
 
   html,
   body {
-    background-color: #0b0f14;
-    color: #f1f5f9;
+    background-color: rgb(var(--c-base));
+    color: rgb(var(--c-ink));
   }
 
   body {
@@ -85,7 +125,12 @@
 
   /* Skeleton shimmer for the loading state */
   .skeleton {
-    background: linear-gradient(90deg, #141a21 25%, #1b232b 37%, #141a21 63%);
+    background: linear-gradient(
+      90deg,
+      rgb(var(--c-surface)) 25%,
+      rgb(var(--c-hairline)) 37%,
+      rgb(var(--c-surface)) 63%
+    );
     background-size: 400% 100%;
     animation: skeleton-loading 1.4s ease infinite;
   }
